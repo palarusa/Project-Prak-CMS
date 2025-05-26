@@ -10,9 +10,8 @@ class PetugasController extends Controller
     // Menampilkan daftar semua petugas
     public function index()
     {
-        return view('petugas.index', [
-            'petugas' => petugas::all()
-        ]);
+        $petugas = petugas::all();
+        return view('petugas.index', compact('petugas'));
     }
 
     // Menampilkan form tambah petugas
@@ -24,9 +23,9 @@ class PetugasController extends Controller
     // Menyimpan data petugas baru
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'no_telepon' => 'required|string|max:20',
+            'no_telepon' => 'required|string|max:20|unique:petugas,no_telepon',
             'alamat' => 'required|string|max:255',
         ]);
 
@@ -36,7 +35,8 @@ class PetugasController extends Controller
             'alamat' => $request->input('alamat'),
         ]);
 
-        return redirect()->route('petugas.index');
+        
+        return redirect()->route('petugas.index')->with('success', 'Petugas berhasil ditambahkan');
     }
 
     // Menampilkan detail petugas
@@ -56,13 +56,14 @@ class PetugasController extends Controller
     // Memproses update data petugas
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $petugas = petugas::findOrFail($id);
+        
+        $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'no_telepon' => 'required|string|max:20',
+            'no_telepon' => 'required|string|max:20|unique:petugas,no_telepon',
             'alamat' => 'required|string|max:255',
         ]);
 
-        $petugas = petugas::findOrFail($id);
 
         $petugas->update([
             'nama' => $request->input('nama'),
@@ -70,7 +71,7 @@ class PetugasController extends Controller
             'alamat' => $request->input('alamat'),
         ]);
 
-        return redirect()->route('petugas.show', $id);
+     return redirect()->route('petugas.index')->with('success', 'Petugas berhasil diperbarui');
     }
 
     // Menampilkan halaman konfirmasi hapus

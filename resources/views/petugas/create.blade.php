@@ -15,3 +15,4 @@
 
     <a href="{{ route('petugas.index') }}" style="display: inline-block; margin-top: 20px;">← Kembali ke daftar</a>
 @endsection
+
