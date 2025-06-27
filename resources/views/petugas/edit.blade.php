@@ -1,26 +1,33 @@
 @extends('layouts.app')
 
-@section('title', 'Edit petugas')
+@section('title', 'Edit Petugas')
 
 @section('content')
-    <h1>Edit petugas</h1>
+    <h2>Edit Petugas</h2>
 
-    <form method="POST" action="{{ route('petugas.update', $petugas->id) }}">
+    @if ($errors->any())
+        <div style="color:red;">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('petugas.update', $petugas->id) }}" method="POST">
         @csrf
         @method('PUT')
 
-        <label>Nama:</label><br>
-        <input type="text" name="nama" value="{{ $petugas->nama }}"><br><br>
+        <label>Nama:</label>
+        <input type="text" name="nama" value="{{ old('nama', $petugas->nama) }}" required><br>
 
-        <label>Nomor Telepon:</label><br>
-        <input type="text" name="no_telepon" value="{{ $petugas->no_telepon }}"><br><br>
+        <label>No Telepon:</label>
+        <input type="text" name="no_telepon" value="{{ old('no_telepon', $petugas->no_telepon) }}" required><br>
 
-        <label>Alamat:</label><br>
-        <input type="text" name="alamat" value="{{ $petugas->alamat }}"><br>
+        <label>Alamat:</label>
+        <input type="text" name="alamat" value="{{ old('alamat', $petugas->alamat) }}" required><br>
 
-        <button style="margin-top: 10px;">Simpan</button>
+        <button type="submit">Update</button>
     </form>
-
-    <br>
-    <a href="{{ route('petugas.show', $petugas->id) }}">← Kembali ke detail</a>
 @endsection

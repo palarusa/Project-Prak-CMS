@@ -3,16 +3,29 @@
 @section('title', 'Tambah Petugas')
 
 @section('content')
-    <h2 style="margin-bottom: 16px;">Tambah Petugas Baru</h2>
+    <h2>Tambah Petugas</h2>
 
-    <form method="POST" action="{{ route('petugas.store') }}" style="line-height: 2;">
+    @if ($errors->any())
+        <div style="color:red;">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('petugas.store') }}" method="POST">
         @csrf
-        <label>Nama: <input type="text" name="nama" required></label><br>
-        <label>Nomor Telepon: <input type="text" name="no_telepon" required></label><br>
-        <label>Alamat: <input type="text" name="alamat" required></label><br>
-        <button type="submit" style="margin-top: 10px;">Tambah</button>
+        <label>Nama:</label>
+        <input type="text" name="nama" value="{{ old('nama') }}" required><br>
+
+        <label>No Telepon:</label>
+        <input type="text" name="no_telepon" value="{{ old('no_telepon') }}" required><br>
+
+        <label>Alamat:</label>
+        <input type="text" name="alamat" value="{{ old('alamat') }}" required><br>
+
+        <button type="submit">Simpan</button>
     </form>
-
-    <a href="{{ route('petugas.index') }}" style="display: inline-block; margin-top: 20px;">← Kembali ke daftar</a>
 @endsection
-

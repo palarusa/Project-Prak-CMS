@@ -104,6 +104,15 @@
                         <a href="{{ route('pelanggan.index') }}">
                         <span class="sub-item">Pelanggan</span>
                       </a>
+                      <a href="{{ route('pembayaran.index') }}">
+                        <span class="sub-item">Pembayaran</span>
+                      </a>
+                      <a href="{{ route('penyewaan.index') }}">
+                        <span class="sub-item">Penyewaan</span>
+                      </a>
+                      <a href="{{ route('sepedamotor.index') }}">
+                        <span class="sub-item">Sepeda Motor</span>
+                      </a>
                     </li>
                   </ul>
                 </div>

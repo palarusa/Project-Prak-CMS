@@ -3,18 +3,44 @@
 @section('title', 'Daftar Pelanggan')
 
 @section('content')
-    <h1>Daftar Pelanggan</h1>
+<div class="container mt-5">
+    <h3>Daftar Pelanggan</h3>
 
-    <ul>
-        @forelse($pelanggan as $p)
-            <li>
-                <a href="/pelanggan/{{ $p['id'] }}">{{ $p['nama'] }}</a>
-            </li>
-        @empty
-            <p>Tidak ada pelanggan.</p>
-        @endforelse
-    </ul>
+    <a href="{{ route('pelanggan.create') }}" class="btn btn-primary mb-3">+ Tambah Pelanggan</a>
 
-    <a href="/pelanggan/create" style="display: inline-block; margin-top: 20px;">+ Tambah Pelanggan</a>
-    <br><br>
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
+    @endif
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nama</th>
+                <th>No Telepon</th>
+                <th>Alamat</th>
+                <th>Email</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($pelanggan as $p)
+            <tr>
+                <td>{{ $p->nama }}</td>
+                <td>{{ $p->no_telepon }}</td>
+                <td>{{ $p->alamat }}</td>
+                <td>{{ $p->email }}</td>
+                <td>
+                    <a href="{{ route('pelanggan.show', $p->id) }}" class="btn btn-info btn-sm">Detail</a>
+                    <a href="{{ route('pelanggan.edit', $p->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                    <form action="{{ route('pelanggan.destroy', $p->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin hapus?')">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-danger btn-sm">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
 @endsection

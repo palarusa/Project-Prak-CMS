@@ -2,91 +2,57 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Petugas;
+use Illuminate\Http\Request;
 
 class PetugasController extends Controller
 {
-    // Menampilkan daftar semua petugas
-    public function index()
-    {
-        $petugas = petugas::all();
+    public function index() {
+        $petugas = Petugas::all();
         return view('petugas.index', compact('petugas'));
     }
 
-    // Menampilkan form tambah petugas
-    public function create()
-    {
+    public function create() {
         return view('petugas.create');
     }
 
-    // Menyimpan data petugas baru
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-            'no_telepon' => 'required|string|max:20|unique:petugas,no_telepon',
-            'alamat' => 'required|string|max:255',
+    public function store(Request $request) {
+        $request->validate([
+            'nama' => 'required',
+            'no_telepon' => 'required|unique:petugas,no_telepon',
+            'alamat' => 'required'
         ]);
 
-        petugas::create([
-            'nama' => $request->input('nama'),
-            'no_telepon' => $request->input('no_telepon'),
-            'alamat' => $request->input('alamat'),
-        ]);
+        Petugas::create($request->all());
 
-        
-        return redirect()->route('petugas.index')->with('success', 'Petugas berhasil ditambahkan');
+        return redirect()->route('petugas.index')->with('success', 'Petugas berhasil ditambahkan.');
     }
 
-    // Menampilkan detail petugas
-    public function show($id)
-    {
-        $petugas = petugas::findOrFail($id);
+    public function show($id) {
+        $petugas = Petugas::findOrFail($id);
         return view('petugas.show', compact('petugas'));
     }
 
-    // Menampilkan form edit petugas
-    public function edit($id)
-    {
-        $petugas = petugas::findOrFail($id);
+    public function edit($id) {
+        $petugas = Petugas::findOrFail($id);
         return view('petugas.edit', compact('petugas'));
     }
 
-    // Memproses update data petugas
-    public function update(Request $request, $id)
-    {
-        $petugas = petugas::findOrFail($id);
-        
-        $validated = $request->validate([
-            'nama' => 'required|string|max:255',
-            'no_telepon' => 'required|string|max:20|unique:petugas,no_telepon',
-            'alamat' => 'required|string|max:255',
+    public function update(Request $request, $id) {
+        $request->validate([
+            'nama' => 'required',
+            'no_telepon' => 'required|unique:petugas,no_telepon,' . $id,
+            'alamat' => 'required'
         ]);
 
+        $petugas = Petugas::findOrFail($id);
+        $petugas->update($request->all());
 
-        $petugas->update([
-            'nama' => $request->input('nama'),
-            'no_telepon' => $request->input('no_telepon'),
-            'alamat' => $request->input('alamat'),
-        ]);
-
-     return redirect()->route('petugas.index')->with('success', 'Petugas berhasil diperbarui');
+        return redirect()->route('petugas.index')->with('success', 'Data petugas berhasil diperbarui.');
     }
 
-    // Menampilkan halaman konfirmasi hapus
-    public function delete($id)
-    {
-        $petugas = petugas::findOrFail($id);
-        return view('petugas.delete', compact('petugas'));
-    }
-
-    // Menghapus data petugas
-    public function destroy($id)
-    {
-        $petugas = petugas::findOrFail($id);
-        $petugas->delete();
-
-        return redirect()->route('petugas.index');
+    public function destroy($id) {
+        Petugas::destroy($id);
+        return redirect()->route('petugas.index')->with('success', 'Data petugas berhasil dihapus.');
     }
 }

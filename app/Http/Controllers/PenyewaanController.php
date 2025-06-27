@@ -2,90 +2,96 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Penyewaan;
+use App\Models\Pelanggan;
+use App\Models\SepedaMotor;
+use App\Models\Petugas;
+use Illuminate\Http\Request;
 
-class penyewaanController extends Controller
+class PenyewaanController extends Controller
 {
-    // Menampilkan daftar semua penyewaan
-    public function index()
-    {
-        return view('penyewaan.index', [
-            'penyewaan' => penyewaan::all()
-        ]);
+    public function index() {
+        $penyewaan = Penyewaan::with(['pelanggan', 'motor', 'petugas'])->get();
+        return view('penyewaan.index', compact('penyewaan'));
     }
 
-    // Menampilkan form tambah penyewaan
-    public function create()
-    {
-        return view('penyewaan.create');
+    public function create() {
+        $pelanggan = Pelanggan::all();
+        $motor = SepedaMotor::where('status', 'Tersedia')->get();
+        $petugas = Petugas::all();
+        return view('penyewaan.create', compact('pelanggan', 'motor', 'petugas'));
     }
 
-    // Menyimpan data penyewaan baru
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $request->validate([
-            'nama' => 'required|string|max:255',
-            'no_telepon' => 'required|string|max:20',
-            'alamat' => 'required|string|max:255',
+            'id_pelanggan' => 'required|exists:pelanggan,id',
+            'id_sepedamotor' => 'required|exists:sepeda_motor,id',
+            'id_petugas' => 'required|exists:petugas,id',
+            'tgl_sewa' => 'required|date',
+            'lama_sewa' => 'required|integer|min:1'
         ]);
 
-        penyewaan::create([
-            'nama' => $request->input('nama'),
-            'no_telepon' => $request->input('no_telepon'),
-            'alamat' => $request->input('alamat'),
+        $motor = SepedaMotor::findOrFail($request->id_sepedamotor);
+        $total_biaya = $motor->harga_sewa_per_hari * $request->lama_sewa;
+
+        Penyewaan::create([
+            'id_pelanggan' => $request->id_pelanggan,
+            'id_sepedamotor' => $request->id_sepedamotor,
+            'id_petugas' => $request->id_petugas,
+            'tgl_sewa' => $request->tgl_sewa,
+            'lama_sewa' => $request->lama_sewa,
+            'total_biaya' => $total_biaya,
         ]);
 
-        return redirect()->route('penyewaan.index');
+        $motor->update(['status' => 'Disewa']);
+
+        return redirect()->route('penyewaan.index')->with('success', 'Penyewaan berhasil ditambahkan.');
     }
 
-    // Menampilkan detail penyewaan
-    public function show($id)
-    {
-        $penyewaan = penyewaan::findOrFail($id);
+    public function show($id) {
+        $penyewaan = Penyewaan::with(['pelanggan', 'motor', 'petugas'])->findOrFail($id);
         return view('penyewaan.show', compact('penyewaan'));
     }
 
-    // Menampilkan form edit penyewaan
-    public function edit($id)
-    {
-        $penyewaan = penyewaan::findOrFail($id);
-        return view('penyewaan.edit', compact('penyewaan'));
+    public function edit($id) {
+        $penyewaan = Penyewaan::findOrFail($id);
+        $pelanggan = Pelanggan::all();
+        $motor = SepedaMotor::all();
+        $petugas = Petugas::all();
+        return view('penyewaan.edit', compact('penyewaan', 'pelanggan', 'motor', 'petugas'));
     }
 
-    // Memproses update data penyewaan
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id) {
         $request->validate([
-            'nama' => 'required|string|max:255',
-            'no_telepon' => 'required|string|max:20',
-            'alamat' => 'required|string|max:255',
+            'id_pelanggan' => 'required|exists:pelanggan,id',
+            'id_sepedamotor' => 'required|exists:sepeda_motor,id',
+            'id_petugas' => 'required|exists:petugas,id',
+            'tgl_sewa' => 'required|date',
+            'lama_sewa' => 'required|integer|min:1'
         ]);
 
-        $penyewaan = penyewaan::findOrFail($id);
+        $penyewaan = Penyewaan::findOrFail($id);
+        $motor = SepedaMotor::findOrFail($request->id_sepedamotor);
+        $total_biaya = $motor->harga_sewa_per_hari * $request->lama_sewa;
 
         $penyewaan->update([
-            'nama' => $request->input('nama'),
-            'no_telepon' => $request->input('no_telepon'),
-            'alamat' => $request->input('alamat'),
+            'id_pelanggan' => $request->id_pelanggan,
+            'id_sepedamotor' => $request->id_sepedamotor,
+            'id_petugas' => $request->id_petugas,
+            'tgl_sewa' => $request->tgl_sewa,
+            'lama_sewa' => $request->lama_sewa,
+            'total_biaya' => $total_biaya,
         ]);
 
-        return redirect()->route('penyewaan.show', $id);
+        return redirect()->route('penyewaan.index')->with('success', 'Data penyewaan diperbarui.');
     }
 
-    // Menampilkan halaman konfirmasi hapus
-    public function delete($id)
-    {
-        $penyewaan = penyewaan::findOrFail($id);
-        return view('penyewaan.delete', compact('penyewaan'));
-    }
-
-    // Menghapus data penyewaan
-    public function destroy($id)
-    {
-        $penyewaan = penyewaan::findOrFail($id);
+    public function destroy($id) {
+        $penyewaan = Penyewaan::findOrFail($id);
+        $motor = $penyewaan->motor;
+        $motor->update(['status' => 'Tersedia']);
         $penyewaan->delete();
 
-        return redirect()->route('penyewaan.index');
+        return redirect()->route('penyewaan.index')->with('success', 'Data penyewaan dihapus.');
     }
 }

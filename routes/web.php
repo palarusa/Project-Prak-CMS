@@ -17,11 +17,11 @@ Route::get('/pelanggan/{id}/delete', [PelangganController::class, 'delete'])->na
 Route::resource('pembayaran', PembayaranController::class);
 Route::get('/pembayaran/{id}/delete', [PembayaranController::class, 'delete'])->name('pembayaran.delete');
 
-Route::resource('penyewaan', penyewaanController::class);
-Route::get('/penyewaan/{id}/delete', [penyewaanController::class, 'delete'])->name('penyewaan.delete');
+Route::resource('penyewaan', PenyewaanController::class);
+Route::get('/penyewaan/{id}/delete', [PenyewaanController::class, 'delete'])->name('penyewaan.delete');
 
-Route::resource('petugas', petugasController::class);
-Route::get('/petugas/{id}/delete', [petugasController::class, 'delete'])->name('petugas.delete');
+Route::resource('petugas', PetugasController::class);
+Route::get('/petugas/{id}/delete', [PetugasController::class, 'delete'])->name('petugas.delete');
 
 Route::resource('sepedamotor', SepedaMotorController::class);
-Route::get('/sepedamotor/{id}/delete', [SepedaMotorController::class, 'delete'])->name('SepedaMotor.delete');
+Route::get('/sepedamotor/{id}/delete', [SepedaMotorController::class, 'delete'])->name('sepedamotor.delete');

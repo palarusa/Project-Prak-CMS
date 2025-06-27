@@ -3,20 +3,44 @@
 @section('title', 'Tambah Pelanggan')
 
 @section('content')
-    <h2 style="margin-bottom: 16px;">Tambah Pelanggan Baru</h2>
+<div class="container mt-5">
+    <h3 class="mb-4">Tambah Pelanggan</h3>
 
-    <form method="POST" action="{{ route('pelanggan.store') }}" style="line-height: 2;">
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form action="{{ route('pelanggan.store') }}" method="POST">
         @csrf
-        <label>Nama: <input type="text" name="nama" required></label><br>
 
-        <label>Nomor Telepon: <input type="text" name="no_telepon" required></label><br>
+        <div class="mb-3">
+            <label for="nama" class="form-label">Nama</label>
+            <input type="text" name="nama" class="form-control" required value="{{ old('nama') }}">
+        </div>
 
-        <label>Alamat: <input type="text" name="alamat" required></label><br>
+        <div class="mb-3">
+            <label for="no_telepon" class="form-label">No Telepon</label>
+            <input type="text" name="no_telepon" class="form-control" required value="{{ old('no_telepon') }}">
+        </div>
 
-        <label>Email: <input type="email" name="email" required></label><br>
+        <div class="mb-3">
+            <label for="alamat" class="form-label">Alamat</label>
+            <textarea name="alamat" class="form-control" required>{{ old('alamat') }}</textarea>
+        </div>
 
-        <button type="submit" style="margin-top: 10px;">Tambah</button>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" required value="{{ old('email') }}">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Simpan</button>
+        <a href="{{ route('pelanggan.index') }}" class="btn btn-secondary">Batal</a>
     </form>
-
-    <a href="{{ route('pelanggan.index') }}" style="display: inline-block; margin-top: 20px;">← Kembali ke daftar</a>
+</div>
 @endsection

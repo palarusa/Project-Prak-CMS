@@ -2,94 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\SepedaMotor;
+use Illuminate\Http\Request;
 
 class SepedaMotorController extends Controller
 {
-    // Menampilkan daftar semua sepedamotor
-    public function index()
-    {
-        return view('sepedamotor.index', [
-            'sepedamotor' => sepedamotor::all()
-        ]);
+    public function index() {
+        $motor = SepedaMotor::all();
+        return view('motor.index', compact('motor'));
     }
 
-    // Menampilkan form tambah sepedamotor
-    public function create()
-    {
-        return view('sepedamotor.create');
+    public function create() {
+        return view('motor.create');
     }
 
-    // Menyimpan data sepedamotor baru
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $request->validate([
-            'merk' => 'required|string|max:255',
-            'tipe' => 'required|string|max:20',
-            'nopol' => 'required|string|max:255',
-            'statusl' => 'required|email|max:255',
+            'merek' => 'required',
+            'tipe' => 'required',
+            'plat_nomor' => 'required',
+            'status' => 'required',
+            'harga_sewa_per_hari' => 'required|numeric'
         ]);
 
-        sepedamotor::create([
-            'nama' => $request->input('nama'),
-            'no_telepon' => $request->input('no_telepon'),
-            'alamat' => $request->input('alamat'),
-            'email' => $request->input('email'),
-        ]);
-
-        return redirect()->route('sepedamotor.index');
+        SepedaMotor::create($request->all());
+        return redirect()->route('motor.index')->with('success', 'Sepeda motor ditambahkan.');
     }
 
-    // Menampilkan detail sepedamotor
-    public function show($id)
-    {
-        $sepedamotor = sepedamotor::findOrFail($id);
-        return view('sepedamotor.show', compact('sepedamotor'));
+    public function show($id) {
+        $motor = SepedaMotor::findOrFail($id);
+        return view('motor.show', compact('motor'));
     }
 
-    // Menampilkan form edit sepedamotor
-    public function edit($id)
-    {
-        $sepedamotor = sepedamotor::findOrFail($id);
-        return view('sepedamotor.edit', compact('sepedamotor'));
+    public function edit($id) {
+        $motor = SepedaMotor::findOrFail($id);
+        return view('motor.edit', compact('motor'));
     }
 
-    // Memproses update data sepedamotor
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'no_telepon' => 'required|string|max:20',
-            'alamat' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-        ]);
-
-        $sepedamotor = sepedamotor::findOrFail($id);
-
-        $sepedamotor->update([
-            'nama' => $request->input('nama'),
-            'no_telepon' => $request->input('no_telepon'),
-            'alamat' => $request->input('alamat'),
-            'email' => $request->input('email'),
-        ]);
-
-        return redirect()->route('sepedamotor.show', $id);
+    public function update(Request $request, $id) {
+        $motor = SepedaMotor::findOrFail($id);
+        $motor->update($request->all());
+        return redirect()->route('motor.index')->with('success', 'Data sepeda motor diperbarui.');
     }
 
-    // Menampilkan halaman konfirmasi hapus
-    public function delete($id)
-    {
-        $sepedamotor = sepedamotor::findOrFail($id);
-        return view('sepedamotor.delete', compact('sepedamotor'));
-    }
-
-    // Menghapus data sepedamotor
-    public function destroy($id)
-    {
-        $sepedamotor = sepedamotor::findOrFail($id);
-        $sepedamotor->delete();
-
-        return redirect()->route('sepedamotor.index');
+    public function destroy($id) {
+        SepedaMotor::destroy($id);
+        return redirect()->route('motor.index')->with('success', 'Data sepeda motor dihapus.');
     }
 }

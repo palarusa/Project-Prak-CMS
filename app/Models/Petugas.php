@@ -5,25 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class petugas extends Model
+class Petugas extends Model
 {
     use HasFactory;
 
-    protected $table = 'petugas'; 
+    protected $table = 'petugas';
+    protected $primaryKey = 'id';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = ['nama', 'no_telepon', 'alamat'];
 
-    protected $primaryKey = 'id'; 
-
-    public $incrementing = false; 
-    protected $keyType = 'string';
-
-    public static function getAll()
+    public function penyewaan()
     {
-        return petugas::all();
+        return $this->hasMany(Penyewaan::class, 'id_petugas');
     }
 
-    public static function find($id)
+    public function pembayaran()
     {
-        return petugas::where('id', $id)->first();
+        return $this->hasMany(Pembayaran::class, 'id_petugas');
     }
 }
