@@ -35,17 +35,20 @@ return [
 
     'connections' => [
 
-       'Oracle' => [
+       'oracle' => [
             'driver' => 'oracle',
             'tns' => env('DB_TNS', ''),
-            'host' => env('DB_HOST', 'localhost'),
+            'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '1521'),
-            'database' => env('DB_DATABASE', 'XE'),
+            'service_name' => env('DB_SERVICE_NAME', 'XE'),
+            'database'       => env('DB_SERVICE_NAME', 'XE'),
             'username' => env('DB_USERNAME', 'c##projectweb'),
             'password' => env('DB_PASSWORD', 'system'),
             'charset' => 'AL32UTF8',
             'prefix' => '',
             'prefix_schema' => env('DB_SCHEMA_PREFIX', ''),
+            'edition'        => env('DB_EDITION', 'ora$base'),
+            'server_version' => env('DB_SERVER_VERSION', '21c'),
             ],
 
         'sqlite' => [
