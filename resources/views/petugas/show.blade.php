@@ -3,11 +3,32 @@
 @section('title', 'Detail Petugas')
 
 @section('content')
-    <h2>Detail Petugas</h2>
+<div class="container mt-5">
+    <div class="card shadow">
+        <div class="card-header bg-info text-white">
+            <h4 class="mb-0">Detail Petugas</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Nama</th>
+                    <td>{{ $petugas->nama }}</td>
+                </tr>
+                <tr>
+                    <th>No Telepon</th>
+                    <td>{{ $petugas->no_telepon }}</td>
+                </tr>
+                <tr>
+                    <th>Alamat</th>
+                    <td>{{ $petugas->alamat }}</td>
+                </tr>
+            </table>
 
-    <p><strong>Nama:</strong> {{ $petugas->nama }}</p>
-    <p><strong>No Telepon:</strong> {{ $petugas->no_telepon }}</p>
-    <p><strong>Alamat:</strong> {{ $petugas->alamat }}</p>
-
-    <a href="{{ route('petugas.index') }}">Kembali</a>
+            <div class="mt-3">
+                <a href="{{ route('petugas.index') }}" class="btn btn-secondary">Kembali</a>
+                <a href="{{ route('petugas.edit', $petugas->id) }}" class="btn btn-warning">Edit</a>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
