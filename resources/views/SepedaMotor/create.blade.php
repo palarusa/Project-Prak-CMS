@@ -3,22 +3,46 @@
 @section('title', 'Tambah Sepeda Motor')
 
 @section('content')
-    <h2 style="margin-bottom: 16px;">Tambah Sepeda Motor Baru</h2>
+<div class="container mt-4">
+    <h2 class="mb-4">Tambah Sepeda Motor Baru</h2>
 
-    <form method="POST" action="{{ route('sepedamotor.store') }}" style="line-height: 2;">
-        @csrf
-        <label>Merek: <input type="text" name="merek" required></label><br>
-        <label>Tipe: <input type="text" name="tipe" required></label><br>
-        <label>Plat Nomor: <input type="text" name="plat_nomor" required></label><br>
-        <label>Status: 
-            <select name="status" required>
-                <option value="Tersedia">Tersedia</option>
-                <option value="Disewa">Disewa</option>
-            </select>
-        </label><br>
-        <label>Harga Sewa per Hari: <input type="number" name="harga_sewa_per_hari" required></label><br>
-        <button type="submit" style="margin-top: 10px;">Tambah</button>
-    </form>
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form method="POST" action="{{ route('sepedamotor.store') }}">
+                @csrf
 
-    <a href="{{ route('sepedamotor.index') }}" style="display: inline-block; margin-top: 20px;">← Kembali ke daftar</a>
+                <div class="mb-3">
+                    <label for="merek" class="form-label">Merek</label>
+                    <input type="text" name="merek" id="merek" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="tipe" class="form-label">Tipe</label>
+                    <input type="text" name="tipe" id="tipe" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="plat_nomor" class="form-label">Plat Nomor</label>
+                    <input type="text" name="plat_nomor" id="plat_nomor" class="form-control" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="status" class="form-label">Status</label>
+                    <select name="status" id="status" class="form-select" required>
+                        <option value="Tersedia">Tersedia</option>
+                        <option value="Disewa">Disewa</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="harga_sewa_per_hari" class="form-label">Harga Sewa per Hari</label>
+                    <input type="number" name="harga_sewa_per_hari" id="harga_sewa_per_hari" class="form-control" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Tambah</button>
+                <a href="{{ route('sepedamotor.index') }}" class="btn btn-secondary ms-2">← Kembali</a>
+            </form>
+        </div>
+    </div>
+</div>
 @endsection

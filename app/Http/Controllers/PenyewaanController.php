@@ -22,7 +22,10 @@ class PenyewaanController extends Controller
         return view('penyewaan.create', compact('pelanggan', 'motor', 'petugas'));
     }
 
-    public function store(Request $request) {
+    public function store(Request $request) 
+    {
+       // dd($request->all());
+
         $request->validate([
             'id_pelanggan' => 'required|exists:pelanggan,id',
             'id_sepedamotor' => 'required|exists:sepeda_motor,id',

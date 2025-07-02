@@ -9,11 +9,11 @@ class SepedaMotorController extends Controller
 {
     public function index() {
         $motor = SepedaMotor::all();
-        return view('motor.index', compact('motor'));
+        return view('sepedamotor.index', compact('motor'));
     }
 
     public function create() {
-        return view('motor.create');
+        return view('sepedamotor.create');
     }
 
     public function store(Request $request) {
@@ -26,27 +26,27 @@ class SepedaMotorController extends Controller
         ]);
 
         SepedaMotor::create($request->all());
-        return redirect()->route('motor.index')->with('success', 'Sepeda motor ditambahkan.');
+        return redirect()->route('sepedamotor.index')->with('success', 'Sepeda motor ditambahkan.');
     }
 
     public function show($id) {
         $motor = SepedaMotor::findOrFail($id);
-        return view('motor.show', compact('motor'));
+        return view('sepedamotor.show', compact('motor'));
     }
 
     public function edit($id) {
         $motor = SepedaMotor::findOrFail($id);
-        return view('motor.edit', compact('motor'));
+        return view('sepedamotor.edit', compact('motor'));
     }
 
     public function update(Request $request, $id) {
         $motor = SepedaMotor::findOrFail($id);
         $motor->update($request->all());
-        return redirect()->route('motor.index')->with('success', 'Data sepeda motor diperbarui.');
+        return redirect()->route('sepedamotor.index')->with('success', 'Data sepeda motor diperbarui.');
     }
 
     public function destroy($id) {
         SepedaMotor::destroy($id);
-        return redirect()->route('motor.index')->with('success', 'Data sepeda motor dihapus.');
+        return redirect()->route('sepedamotor.index')->with('success', 'Data sepeda motor dihapus.');
     }
 }

@@ -89,6 +89,7 @@
                 </span>
                 <h4 class="text-section">Components</h4>
               </li>
+              
               <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#base">
                   <i class="fas fa-layer-group"></i>
@@ -103,6 +104,15 @@
                       </a>
                         <a href="{{ route('pelanggan.index') }}">
                         <span class="sub-item">Pelanggan</span>
+                      </a>
+                      <a href="{{ route('penyewaan.index') }}">
+                        <span class="sub-item">Penyewaan</span>
+                      </a>
+                      <a href="{{ route('pembayaran.index') }}">
+                        <span class="sub-item">Pembayaran</span>
+                      </a>
+                      <a href="{{ route('sepedamotor.index') }}">
+                        <span class="sub-item">Sepeda Motor</span>
                       </a>
                     </li>
                   </ul>

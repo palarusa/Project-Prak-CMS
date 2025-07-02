@@ -10,18 +10,19 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        Schema::create('pembayarans', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
-    }
+{
+    Schema::table('sepeda_motor', function (Blueprint $table) {
+        $table->decimal('harga_sewa_per_hari', 10, 2)->after('status');
+    });
+}
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
-    {
-        Schema::dropIfExists('pembayarans');
-    }
+{
+    Schema::table('sepeda_motor', function (Blueprint $table) {
+        $table->dropColumn('harga_sewa_per_hari');
+    });
+}
 };

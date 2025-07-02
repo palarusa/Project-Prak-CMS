@@ -1,16 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<footer>
+    <hr>
+    <p>&copy; {{ date('Y') }} - Dibuat oleh Ariq</p>
 
-    <title>@yield('title', 'Rental Sepeda Motor')</title>
-</head>
-<body>
-    @include('partials.navbar')
-
-    <div class="container">
-        @yield('content')
-    </div>
-</body>
-</html>
+    @auth
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" style="background: none; border: none; color: red; cursor: pointer;">
+                Logout
+            </button>
+        </form>
+    @endauth
+</footer>
