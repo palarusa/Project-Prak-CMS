@@ -29,7 +29,8 @@
                         <li class="list-group-item d-flex justify-content-between align-items-center">
                             <div>
                                 <strong>{{ $p->pelanggan->nama }}</strong> menyewa
-                                <strong>{{ $p->motor->merek }}</strong>
+                                <td>{{ optional($p->SepedaMotor)->merek ?? '-' }}</td>
+
                                 pada <span class="text-muted">{{ \Carbon\Carbon::parse($p->tgl_sewa)->format('d M Y') }}</span>
                                 selama <strong>{{ $p->lama_sewa }} hari</strong>
                             </div>

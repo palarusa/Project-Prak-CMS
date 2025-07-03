@@ -7,94 +7,107 @@ use App\Models\Pelanggan;
 use App\Models\SepedaMotor;
 use App\Models\Petugas;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PenyewaanController extends Controller
 {
-    public function index() {
-        $penyewaan = Penyewaan::with(['pelanggan', 'motor', 'petugas'])->get();
+    public function index()
+    {
+        $penyewaan = Penyewaan::with(['pelanggan', 'SepedaMotor', 'petugas'])->get();
         return view('penyewaan.index', compact('penyewaan'));
     }
 
-    public function create() {
-        $pelanggan = Pelanggan::all();
-        $motor = SepedaMotor::where('status', 'Tersedia')->get();
-        $petugas = Petugas::all();
-        return view('penyewaan.create', compact('pelanggan', 'motor', 'petugas'));
-    }
-
-    public function store(Request $request) 
+    public function create()
     {
-       // dd($request->all());
+        return view('penyewaan.create', [
+            'pelanggan' => Pelanggan::all(),
+            'motor' => SepedaMotor::all(),
+            'petugas' => Petugas::all(),
+        ]);
+    }
 
-        $request->validate([
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
             'id_pelanggan' => 'required|exists:pelanggan,id',
-            'id_sepedamotor' => 'required|exists:sepeda_motor,id',
-            'id_petugas' => 'required|exists:petugas,id',
-            'tgl_sewa' => 'required|date',
-            'lama_sewa' => 'required|integer|min:1'
+            'id_motor'     => 'required|exists:sepeda_motors,id',
+            'tgl_sewa'     => 'required|date',
+            'tgl_kembali'  => 'required|date|after_or_equal:tgl_sewa',
+            'total_bayar'  => 'required|numeric|min:0',
+            'id_petugas'   => 'required|exists:petugas,id',
         ]);
 
-        $motor = SepedaMotor::findOrFail($request->id_sepedamotor);
-        $total_biaya = $motor->harga_sewa_per_hari * $request->lama_sewa;
-
-        Penyewaan::create([
-            'id_pelanggan' => $request->id_pelanggan,
-            'id_sepedamotor' => $request->id_sepedamotor,
-            'id_petugas' => $request->id_petugas,
-            'tgl_sewa' => $request->tgl_sewa,
-            'lama_sewa' => $request->lama_sewa,
-            'total_biaya' => $total_biaya,
-        ]);
-
-        $motor->update(['status' => 'Disewa']);
-
-        return redirect()->route('penyewaan.index')->with('success', 'Penyewaan berhasil ditambahkan.');
+        try {
+            Penyewaan::create($validated);
+            \Log::info('Data penyewaan ditambahkan', compact('validated'));
+            return redirect()->route('penyewaan.index')->with('success', 'Data penyewaan berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            \Log::error('Gagal menambahkan penyewaan', ['error' => $e->getMessage()]);
+            return back()->withInput()->with('error', 'Terjadi kesalahan saat menyimpan data penyewaan.');
+        }
     }
 
-    public function show($id) {
-        $penyewaan = Penyewaan::with(['pelanggan', 'motor', 'petugas'])->findOrFail($id);
-        return view('penyewaan.show', compact('penyewaan'));
+    public function show($id)
+    {
+        try {
+            $penyewaan = Penyewaan::with(['pelanggan', 'SepedaMotor', 'petugas'])->findOrFail($id);
+            return view('penyewaan.show', compact('penyewaan'));
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('penyewaan.index')->with('error', 'Data penyewaan tidak ditemukan.');
+        }
     }
 
-    public function edit($id) {
-        $penyewaan = Penyewaan::findOrFail($id);
-        $pelanggan = Pelanggan::all();
-        $motor = SepedaMotor::all();
-        $petugas = Petugas::all();
-        return view('penyewaan.edit', compact('penyewaan', 'pelanggan', 'motor', 'petugas'));
+    public function edit($id)
+    {
+        try {
+            $penyewaan = Penyewaan::findOrFail($id);
+            return view('penyewaan.edit', [
+                'penyewaan' => $penyewaan,
+                'pelanggan' => Pelanggan::all(),
+                'sepeda_motor' => SepedaMotor::all(),
+                'petugas' => Petugas::all(),
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('penyewaan.index')->with('error', 'Data penyewaan tidak ditemukan.');
+        }
     }
 
-    public function update(Request $request, $id) {
-        $request->validate([
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
             'id_pelanggan' => 'required|exists:pelanggan,id',
-            'id_sepedamotor' => 'required|exists:sepeda_motor,id',
-            'id_petugas' => 'required|exists:petugas,id',
-            'tgl_sewa' => 'required|date',
-            'lama_sewa' => 'required|integer|min:1'
+            'id_motor'     => 'required|exists:sepeda_motors,id',
+            'tgl_sewa'     => 'required|date',
+            'tgl_kembali'  => 'required|date|after_or_equal:tgl_sewa',
+            'total_bayar'  => 'required|numeric|min:0',
+            'id_petugas'   => 'required|exists:petugas,id',
         ]);
 
-        $penyewaan = Penyewaan::findOrFail($id);
-        $motor = SepedaMotor::findOrFail($request->id_sepedamotor);
-        $total_biaya = $motor->harga_sewa_per_hari * $request->lama_sewa;
-
-        $penyewaan->update([
-            'id_pelanggan' => $request->id_pelanggan,
-            'id_sepedamotor' => $request->id_sepedamotor,
-            'id_petugas' => $request->id_petugas,
-            'tgl_sewa' => $request->tgl_sewa,
-            'lama_sewa' => $request->lama_sewa,
-            'total_biaya' => $total_biaya,
-        ]);
-
-        return redirect()->route('penyewaan.index')->with('success', 'Data penyewaan diperbarui.');
+        try {
+            $penyewaan = Penyewaan::findOrFail($id);
+            $penyewaan->update($validated);
+            \Log::info('Data penyewaan diperbarui', compact('id', 'validated'));
+            return redirect()->route('penyewaan.index')->with('success', 'Data penyewaan berhasil diperbarui.');
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('penyewaan.index')->with('error', 'Data penyewaan tidak ditemukan.');
+        } catch (\Exception $e) {
+            \Log::error('Gagal memperbarui penyewaan', ['error' => $e->getMessage()]);
+            return back()->withInput()->with('error', 'Terjadi kesalahan saat memperbarui data penyewaan.');
+        }
     }
 
-    public function destroy($id) {
-        $penyewaan = Penyewaan::findOrFail($id);
-        $motor = $penyewaan->motor;
-        $motor->update(['status' => 'Tersedia']);
-        $penyewaan->delete();
-
-        return redirect()->route('penyewaan.index')->with('success', 'Data penyewaan dihapus.');
+    public function destroy($id)
+    {
+        try {
+            $penyewaan = Penyewaan::findOrFail($id);
+            $penyewaan->delete();
+            \Log::info('Data penyewaan dihapus', compact('id'));
+            return redirect()->route('penyewaan.index')->with('success', 'Data penyewaan berhasil dihapus.');
+        } catch (ModelNotFoundException $e) {
+            return redirect()->route('penyewaan.index')->with('error', 'Data penyewaan tidak ditemukan.');
+        } catch (\Exception $e) {
+            \Log::error('Gagal menghapus penyewaan', ['error' => $e->getMessage()]);
+            return redirect()->route('penyewaan.index')->with('error', 'Terjadi kesalahan saat menghapus data penyewaan.');
+        }
     }
 }

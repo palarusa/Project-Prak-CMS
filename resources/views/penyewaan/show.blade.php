@@ -10,7 +10,7 @@
 
             <ul class="list-group list-group-flush mb-4">
                 <li class="list-group-item"><strong>Pelanggan:</strong> {{ $penyewaan->pelanggan->nama }}</li>
-                <li class="list-group-item"><strong>Motor:</strong> {{ $penyewaan->motor->merek }} - {{ $penyewaan->motor->plat_nomor }}</li>
+                <li class="list-group-item"><strong>Motor:</strong> {{ $penyewaan->SepedaMotor->merek }} - {{ $penyewaan->SepedaMotor->plat_nomor }}</li>
                 <li class="list-group-item"><strong>Petugas:</strong> {{ $penyewaan->petugas->nama }}</li>
                 <li class="list-group-item"><strong>Tanggal Sewa:</strong> {{ $penyewaan->tgl_sewa }}</li>
                 <li class="list-group-item"><strong>Lama Sewa:</strong> {{ $penyewaan->lama_sewa }} hari</li>

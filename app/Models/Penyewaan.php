@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\SepedaMotor;
 
 class Penyewaan extends Model
 {
@@ -20,7 +21,7 @@ class Penyewaan extends Model
         return $this->belongsTo(Pelanggan::class, 'id_pelanggan');
     }
 
-    public function motor()
+    public function SepedaMotor()
     {
         return $this->belongsTo(SepedaMotor::class, 'id_sepedamotor');
     }
