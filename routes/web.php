@@ -27,8 +27,14 @@ Route::middleware('auth')->group(function () {
 
     // Halaman home setelah login
     Route::get('/home', function () {
-        return view('home');
-    });
+        return view('home', [
+            'totalPetugas'      => \App\Models\Petugas::count(),
+            'totalPelanggan'    => \App\Models\Pelanggan::count(),
+            'totalPenyewaan'    => \App\Models\Penyewaan::count(),
+            'totalPembayaran'   => \App\Models\Pembayaran::count(),
+            'totalSepedaMotor'  => \App\Models\SepedaMotor::count(),
+        ]);
+    })->middleware('auth');
 });
 
 // Route login/logout (tidak pakai middleware auth)
@@ -38,5 +44,5 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Redirect root "/" ke /home
 Route::get('/', function () {
-    return redirect('/home');
+    return redirect('/login');
 });
