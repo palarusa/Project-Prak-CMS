@@ -58,6 +58,12 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'akseslog' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/' . now()->format('Y_m_d') . '_Akses_Log.log'),
+            'level' => 'info',
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
