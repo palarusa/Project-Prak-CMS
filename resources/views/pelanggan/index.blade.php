@@ -66,6 +66,8 @@
                     </tbody>
                 </table>
             </div>
+
+            <a href="/" class="btn btn-secondary">← Kembali ke Daftar</a>
         </div>
     </div>
 </div>
