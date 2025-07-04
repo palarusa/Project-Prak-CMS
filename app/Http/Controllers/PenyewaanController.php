@@ -68,7 +68,7 @@ class PenyewaanController extends Controller
                 'petugas' => Petugas::all(),
             ]);
         } catch (ModelNotFoundException $e) {
-            return redirect()->route('penyewaan.index')->with('error', 'Data penyewaan tidak ditemukan.');
+            return redirect()->route('penyewaan.index')->with('error', 'Data penyewaan tidak tersedia.');
         }
     }
 
